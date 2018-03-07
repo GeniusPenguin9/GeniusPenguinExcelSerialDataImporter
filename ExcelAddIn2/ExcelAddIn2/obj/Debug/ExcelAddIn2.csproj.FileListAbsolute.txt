@@ -1,0 +1,12 @@
+E:\[5]QA输出文档\2018年第1季度\体外泵-数据分析软件EXCEL\Excel COM\ExcelAddIn2\ExcelAddIn2\bin\Debug\ExcelAddIn2.dll
+E:\[5]QA输出文档\2018年第1季度\体外泵-数据分析软件EXCEL\Excel COM\ExcelAddIn2\ExcelAddIn2\bin\Debug\ExcelAddIn2.pdb
+E:\[5]QA输出文档\2018年第1季度\体外泵-数据分析软件EXCEL\Excel COM\ExcelAddIn2\ExcelAddIn2\bin\Debug\ExcelAddIn2.dll.manifest
+E:\[5]QA输出文档\2018年第1季度\体外泵-数据分析软件EXCEL\Excel COM\ExcelAddIn2\ExcelAddIn2\bin\Debug\ExcelAddIn2.vsto
+E:\[5]QA输出文档\2018年第1季度\体外泵-数据分析软件EXCEL\Excel COM\ExcelAddIn2\ExcelAddIn2\bin\Debug\Microsoft.Office.Tools.Common.v4.0.Utilities.dll
+E:\[5]QA输出文档\2018年第1季度\体外泵-数据分析软件EXCEL\Excel COM\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.csprojResolveAssemblyReference.cache
+E:\[5]QA输出文档\2018年第1季度\体外泵-数据分析软件EXCEL\Excel COM\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.Properties.Resources.resources
+E:\[5]QA输出文档\2018年第1季度\体外泵-数据分析软件EXCEL\Excel COM\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.Ribbon1.resources
+E:\[5]QA输出文档\2018年第1季度\体外泵-数据分析软件EXCEL\Excel COM\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.csproj.GenerateResource.Cache
+E:\[5]QA输出文档\2018年第1季度\体外泵-数据分析软件EXCEL\Excel COM\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.csproj.CoreCompileInputs.cache
+E:\[5]QA输出文档\2018年第1季度\体外泵-数据分析软件EXCEL\Excel COM\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.dll
+E:\[5]QA输出文档\2018年第1季度\体外泵-数据分析软件EXCEL\Excel COM\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.pdb
