@@ -31,15 +31,27 @@ namespace ExcelAddIn2
                 {
                     var frames = ReadFramesFromFile(file);
                     var line = 2;
-                    uint StaticHead = 0xAA55A050;
+                    uint StaticHead = 0xA050AA55;
+
+                    sheet.Cells[1, 1].Value = "Start Time";
+                    sheet.Cells[1, 2].Value = "End Time";
+                    for (int i = 0; i < 30; i++)
+                    {
+                        sheet.Cells[1, 3 + i * 7].Value = "Flow" + i;
+                        sheet.Cells[1, 4 + i * 7].Value = "Speed" + i;
+                        sheet.Cells[1, 5 + i * 7].Value = "Current" + i;
+                        sheet.Cells[1, 6 + i * 7].Value = "IPressure" + i;
+                        sheet.Cells[1, 7 + i * 7].Value = "OPressure" + i;
+                        sheet.Cells[1, 8 + i * 7].Value = "SVoltage" + i;
+                        sheet.Cells[1, 9 + i * 7].Value = "Alarm" + i;
+                    }
 
                     foreach (var frame in frames)
                     {
-                        var Head2 = frame.Head;
                         if (frame.Head == StaticHead)
                         {
-                            sheet.Cells[line, 1].Value = frame.StartTime;
-                            sheet.Cells[line, 2].Value = frame.EndTime;
+                            sheet.Cells[line, 1].Value = ConvertDateTime(frame.StartTime);
+                            sheet.Cells[line, 2].Value = ConvertDateTime(frame.EndTime);
                             for (int i = 0; i < 30; i++)
                             {
                                 sheet.Cells[line, 3 + i * 7].Value = frame.Data[i].Flow;
@@ -54,9 +66,19 @@ namespace ExcelAddIn2
                             line++;
                         }
                         else
-                        { MessageBox.Show("数据错误");
+                        {
+                            MessageBox.Show("数据错误");
                         }
                     }
+                }
+
+                UInt32 ToggleEndian32(UInt32 number)
+                {
+                    return BitConverter.ToUInt32(BitConverter.GetBytes(number).Reverse().ToArray(), 0);
+                }
+                UInt16 ToggleEndian16(UInt16 number)
+                {
+                    return BitConverter.ToUInt16(BitConverter.GetBytes(number).Reverse().ToArray(), 0);
                 }
 
                 List<Frame> ReadFramesFromFile(string file)
@@ -70,12 +92,15 @@ namespace ExcelAddIn2
                     {
                         var frame = new Frame();
 
-                        frame.Head = reader.ReadInt32();
-                        frame.Num = reader.ReadInt16();
-                        frame.StartTime = reader.ReadInt32();
-                        frame.EndTime = reader.ReadInt32();
-                        frame.Reserved1 = reader.ReadInt16();
+                        // 16
+                        frame.Head = reader.ReadUInt32();
+                        frame.Num = ToggleEndian16(reader.ReadUInt16());
+                        frame.StartTime = ToggleEndian32(reader.ReadUInt32());
+                        frame.EndTime = ToggleEndian32(reader.ReadUInt32());
+                        frame.Reserved1 = reader.ReadUInt16();
                         frame.Data = new Data[30];
+
+                        // 16*30=480
                         for (int j = 0; j < 30; j++)
                         {
                             frame.Data[j].Flow = reader.ReadInt16();
@@ -87,10 +112,12 @@ namespace ExcelAddIn2
                             frame.Data[j].Reserved5 = reader.ReadInt16();
                             frame.Data[j].Alarm = reader.ReadInt16();
                         }
-                        frame.Reserved2 = reader.ReadInt16();
-                        frame.Reserved3 = reader.ReadInt16();
-                        frame.Reserved4 = reader.ReadInt16();
-                        frame.Tail = reader.ReadInt16();
+
+                        // 16
+                        frame.Reserved2 = reader.ReadUInt32();
+                        frame.Reserved3 = reader.ReadUInt32();
+                        frame.Reserved4 = reader.ReadUInt32();
+                        frame.Tail = reader.ReadUInt32();
 
                         result.Add(frame);
                     }
@@ -98,33 +125,58 @@ namespace ExcelAddIn2
                     reader.Close();
                     return result;
                 }
+
+                DateTime ConvertDateTime(UInt32 raw_time)
+                {
+                    // TODO: delete test
+                    var test = new List<int>
+                    {
+                        MaskByte(raw_time, 25, 31),
+                        MaskByte(raw_time, 24, 21),
+                        MaskByte(raw_time, 20, 16),
+                        MaskByte(raw_time, 15, 11),
+                        MaskByte(raw_time, 10, 5),
+                        MaskByte(raw_time, 4, 0)
+                    };
+                    return new DateTime(
+                        MaskByte(raw_time, 25, 31),
+                        MaskByte(raw_time, 24, 21),
+                        MaskByte(raw_time, 20, 16),
+                        MaskByte(raw_time, 15, 11),
+                        MaskByte(raw_time, 10, 5),
+                        MaskByte(raw_time, 4, 0));
+                }
+
+                int MaskByte(UInt32 number, int start, int end)
+                {
+                    return (int)(number & (int)(Math.Pow( 2, end) - Math.Pow(2, start))) >> start;
+                }
             }
-            
-            }
+        }
         public struct Frame
         {
-            public int Head;
-            public short Num;
-            public int StartTime;
-            public int EndTime;
-            public short Reserved1;
+            public UInt32 Head;
+            public UInt16 Num;
+            public UInt32 StartTime;
+            public UInt32 EndTime;
+            public UInt16 Reserved1;
             public Data[] Data;
-            public int Reserved2;
-            public int Reserved3;
-            public int Reserved4;
-            public int Tail;
+            public UInt32 Reserved2;
+            public UInt32 Reserved3;
+            public UInt32 Reserved4;
+            public UInt32 Tail;
         }
 
         public struct Data
         {
-            public short Flow;
-            public short Speed;
-            public short Current;
-            public short IPressure;
-            public short OPressure;
-            public short SVoltage;
-            public short Reserved5;
-            public short Alarm;
+            public Int16 Flow;
+            public Int16 Speed;
+            public Int16 Current;
+            public Int16 IPressure;
+            public Int16 OPressure;
+            public Int16 SVoltage;
+            public Int16 Reserved5;
+            public Int16 Alarm;
         }
     }
 }

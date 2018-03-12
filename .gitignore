@@ -1,0 +1,9 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/ExcelAddIn2/Backup
+/ExcelAddIn2/Backup1
+/ExcelAddIn2/.vs/ExcelAddIn2/v15
+/ExcelAddIn2/UpgradeLog2.htm
+/ExcelAddIn2/UpgradeLog.htm
