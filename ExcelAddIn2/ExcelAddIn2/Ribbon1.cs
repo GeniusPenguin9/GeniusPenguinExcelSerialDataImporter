@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.Office.Tools.Ribbon;
 using Microsoft.Office.Tools.Excel;
+using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
 
 namespace ExcelAddIn2
@@ -18,9 +19,9 @@ namespace ExcelAddIn2
 
         private void DB_Open_Click(object sender, RibbonControlEventArgs e)
         {
-            Worksheet sheet = Globals.ThisAddIn.Application.ActiveSheet;
+            Excel.Worksheet sheet = Globals.ThisAddIn.Application.ActiveSheet;
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "数据文件(.db)|*.db|所有文件(.)|*.*";
+            openFileDialog.Filter = "数据文件(.dat)|*.dat|所有文件(.)|*.*";
             openFileDialog.Multiselect = true;
             openFileDialog.Title = "选择数据文件";
             openFileDialog.ShowDialog();
@@ -30,30 +31,37 @@ namespace ExcelAddIn2
                 {
                     var frames = ReadFramesFromFile(file);
                     var line = 2;
+                    uint StaticHead = 0xAA55A050;
 
                     foreach (var frame in frames)
                     {
-
-                        sheet.Cells[line, 1].Value = frame.StartTime;
-                        sheet.Cells[line, 2].Value = frame.EndTime;
-                        for (int i = 0; i < 30; i++)
+                        var Head2 = frame.Head;
+                        if (frame.Head == StaticHead)
                         {
-                            sheet.Cells[line, 3 + i * 7].Value = frame.Data[i].Flow;
-                            sheet.Cells[line, 4 + i * 7].Value = frame.Data[i].Speed;
-                            sheet.Cells[line, 5 + i * 7].Value = frame.Data[i].Current;
-                            sheet.Cells[line, 6 + i * 7].Value = frame.Data[i].IPressure;
-                            sheet.Cells[line, 7 + i * 7].Value = frame.Data[i].OPressure;
-                            sheet.Cells[line, 8 + i * 7].Value = frame.Data[i].SVoltage;
-                            sheet.Cells[line, 9 + i * 7].Value = frame.Data[i].Alarm;
+                            sheet.Cells[line, 1].Value = frame.StartTime;
+                            sheet.Cells[line, 2].Value = frame.EndTime;
+                            for (int i = 0; i < 30; i++)
+                            {
+                                sheet.Cells[line, 3 + i * 7].Value = frame.Data[i].Flow;
+                                sheet.Cells[line, 4 + i * 7].Value = frame.Data[i].Speed;
+                                sheet.Cells[line, 5 + i * 7].Value = frame.Data[i].Current;
+                                sheet.Cells[line, 6 + i * 7].Value = frame.Data[i].IPressure;
+                                sheet.Cells[line, 7 + i * 7].Value = frame.Data[i].OPressure;
+                                sheet.Cells[line, 8 + i * 7].Value = frame.Data[i].SVoltage;
+                                sheet.Cells[line, 9 + i * 7].Value = frame.Data[i].Alarm;
+                            }
+
+                            line++;
                         }
-
-                        line++;
+                        else
+                        { MessageBox.Show("数据错误");
+                        }
                     }
-        }
+                }
 
-            public List<Frame> ReadFramesFromFile(string file)
+                List<Frame> ReadFramesFromFile(string file)
                 {
-                    var frameLength = 188;
+                    var frameLength = 512;
                     var result = new List<Frame>();
                     var count = new FileInfo(file).Length / frameLength;
                     var reader = new BinaryReader(new FileStream(file, FileMode.Open));
@@ -62,16 +70,26 @@ namespace ExcelAddIn2
                     {
                         var frame = new Frame();
 
-                        frame.Head = reader.ReadInt16();
-                        frame.StartTime = reader.ReadInt16();
-                        frame.EndTime = reader.ReadInt16();
+                        frame.Head = reader.ReadInt32();
+                        frame.Num = reader.ReadInt16();
+                        frame.StartTime = reader.ReadInt32();
+                        frame.EndTime = reader.ReadInt32();
+                        frame.Reserved1 = reader.ReadInt16();
                         frame.Data = new Data[30];
                         for (int j = 0; j < 30; j++)
                         {
-                            frame.Data[j].Flow = reader.ReadDouble();
-                            frame.Data[j].Speed = reader.ReadDouble();
-                            frame.Data[j].Voltage = reader.ReadDouble();
+                            frame.Data[j].Flow = reader.ReadInt16();
+                            frame.Data[j].Speed = reader.ReadInt16();
+                            frame.Data[j].Current = reader.ReadInt16();
+                            frame.Data[j].IPressure = reader.ReadInt16();
+                            frame.Data[j].OPressure = reader.ReadInt16();
+                            frame.Data[j].SVoltage = reader.ReadInt16();
+                            frame.Data[j].Reserved5 = reader.ReadInt16();
+                            frame.Data[j].Alarm = reader.ReadInt16();
                         }
+                        frame.Reserved2 = reader.ReadInt16();
+                        frame.Reserved3 = reader.ReadInt16();
+                        frame.Reserved4 = reader.ReadInt16();
                         frame.Tail = reader.ReadInt16();
 
                         result.Add(frame);
@@ -80,7 +98,9 @@ namespace ExcelAddIn2
                     reader.Close();
                     return result;
                 }
-
+            }
+            
+            }
         public struct Frame
         {
             public int Head;
@@ -108,93 +128,3 @@ namespace ExcelAddIn2
         }
     }
 }
-
-//namespace ExcelAddIn1
-//{
-//    public struct Frame
-//    {
-//        public Int16 Head;
-//        public Int16 StartTime;
-//        public Int16 EndTime;
-//        public Data[] Data;
-//        public Int16 Tail;
-//    }
-
-//    public struct Data
-//    {
-//        public double Flow;
-//        public double Speed;
-//        public double Voltage;
-//    }
-
-//    public partial class Ribbon1
-//    {
-//        private void Ribbon1_Load(object sender, RibbonUIEventArgs e)
-//        {
-//        }
-
-//        private void button1_Click(object sender, RibbonControlEventArgs e)
-//        {
-//            Excel.Worksheet sheet = Globals.ThisAddIn.Application.ActiveSheet;
-
-//            var fd = new OpenFileDialog();
-//            fd.Filter = "dat文件|*.dat";
-//            fd.Multiselect = true;
-//            fd.ShowDialog();
-//            if (fd.FileNames.Length > 0)
-//            {
-//                foreach (var file in fd.FileNames)
-//                {
-//                    var frames = ReadFramesFromFile(file);
-//                    var line = 2;
-
-//                    foreach (var frame in frames)
-//                    {
-
-//                        sheet.Cells[line, 1].Value = frame.StartTime;
-//                        sheet.Cells[line, 2].Value = frame.EndTime;
-//                        for (int i = 0; i < 30; i++)
-//                        {
-//                            sheet.Cells[line, 3 + i * 3].Value = frame.Data[i].Flow;
-//                            sheet.Cells[line, 4 + i * 3].Value = frame.Data[i].Speed;
-//                            sheet.Cells[line, 5 + i * 3].Value = frame.Data[i].Voltage;
-//                        }
-
-//                        line++;
-//                    }
-
-//                }
-//            }
-//        }
-
-//        private List<Frame> ReadFramesFromFile(string file)
-//        {
-//            var frameLength = 188;
-//            var result = new List<Frame>();
-//            var count = new FileInfo(file).Length / frameLength;
-//            var reader = new BinaryReader(new FileStream(file, FileMode.Open));
-
-//            for (int i = 0; i < count; i++)
-//            {
-//                var frame = new Frame();
-
-//                frame.Head = reader.ReadInt16();
-//                frame.StartTime = reader.ReadInt16();
-//                frame.EndTime = reader.ReadInt16();
-//                frame.Data = new Data[30];
-//                for (int j = 0; j < 30; j++)
-//                {
-//                    frame.Data[j].Flow = reader.ReadDouble();
-//                    frame.Data[j].Speed = reader.ReadDouble();
-//                    frame.Data[j].Voltage = reader.ReadDouble();
-//                }
-//                frame.Tail = reader.ReadInt16();
-
-//                result.Add(frame);
-//            }
-
-//            reader.Close();
-//            return result;
-//        }
-//    }
-//}
