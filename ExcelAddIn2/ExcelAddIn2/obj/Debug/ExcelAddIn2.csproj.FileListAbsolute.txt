@@ -22,3 +22,16 @@ C:\Users\wanglj\source\repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\Ex
 C:\Users\wanglj\source\repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\bin\Debug\ExcelAddIn2.dll.manifest
 C:\Users\wanglj\source\repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\bin\Debug\ExcelAddIn2.vsto
 C:\Users\wanglj\source\repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\bin\Debug\Microsoft.Office.Tools.Common.v4.0.Utilities.dll
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\bin\Debug\ExcelAddIn2.dll
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\bin\Debug\ExcelAddIn2.pdb
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\bin\Debug\ExcelAddIn2.dll.manifest
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\bin\Debug\ExcelAddIn2.vsto
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\bin\Debug\Microsoft.Office.Tools.Common.v4.0.Utilities.dll
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\bin\Debug\Microsoft.VisualStudio.Tools.Applications.Runtime.dll
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.csprojResolveAssemblyReference.cache
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.Properties.Resources.resources
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.Ribbon1.resources
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.csproj.GenerateResource.Cache
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.csproj.CoreCompileInputs.cache
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.dll
+C:\Users\cauli\Source\Repos\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.pdb
