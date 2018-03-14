@@ -25,6 +25,7 @@ namespace ExcelAddIn2
             openFileDialog.Multiselect = true;
             openFileDialog.Title = "选择数据文件";
             openFileDialog.ShowDialog();
+
             if (openFileDialog.FileName.Length > 0)
             {
                 foreach (var file in openFileDialog.FileNames)
@@ -46,28 +47,38 @@ namespace ExcelAddIn2
                         sheet.Cells[1, 9 + i * 7].Value = "Alarm" + i;
                     }
 
+                    int Old_Num = frames[0].Num-1;
                     foreach (var frame in frames)
                     {
                         if (frame.Head == StaticHead)
                         {
-                            sheet.Cells[line, 1].Value = ConvertDateTime(frame.StartTime);
-                            sheet.Cells[line, 2].Value = ConvertDateTime(frame.EndTime);
-                            for (int i = 0; i < 30; i++)
+                            ;
+                            if (frame.Num == Old_Num + 1)
                             {
-                                sheet.Cells[line, 3 + i * 7].Value = frame.Data[i].Flow;
-                                sheet.Cells[line, 4 + i * 7].Value = frame.Data[i].Speed;
-                                sheet.Cells[line, 5 + i * 7].Value = frame.Data[i].Current;
-                                sheet.Cells[line, 6 + i * 7].Value = frame.Data[i].IPressure;
-                                sheet.Cells[line, 7 + i * 7].Value = frame.Data[i].OPressure;
-                                sheet.Cells[line, 8 + i * 7].Value = frame.Data[i].SVoltage;
-                                sheet.Cells[line, 9 + i * 7].Value = frame.Data[i].Alarm;
+                                sheet.Cells[line, 1].Value = ConvertDateTime(frame.StartTime);
+                                sheet.Cells[line, 2].Value = ConvertDateTime(frame.EndTime);
+                                for (int i = 0; i < 30; i++)
+                                {
+                                    sheet.Cells[line, 3 + i * 7].Value = frame.Data[i].Flow;
+                                    sheet.Cells[line, 4 + i * 7].Value = frame.Data[i].Speed;
+                                    sheet.Cells[line, 5 + i * 7].Value = frame.Data[i].Current;
+                                    sheet.Cells[line, 6 + i * 7].Value = frame.Data[i].IPressure;
+                                    sheet.Cells[line, 7 + i * 7].Value = frame.Data[i].OPressure;
+                                    sheet.Cells[line, 8 + i * 7].Value = frame.Data[i].SVoltage;
+                                    sheet.Cells[line, 9 + i * 7].Value = frame.Data[i].Alarm;
+                                }
+                                line++;
+                                Old_Num = frame.Num;
                             }
-
-                            line++;
+                            else {
+                                MessageBox.Show("数据异常：存在漏帧");
+                                break;
+                            }
                         }
                         else
                         {
-                            MessageBox.Show("数据错误");
+                            MessageBox.Show("数据异常：帧头错误");
+                            break;
                         }
                     }
                 }
@@ -80,7 +91,8 @@ namespace ExcelAddIn2
                 {
                     return BitConverter.ToUInt16(BitConverter.GetBytes(number).Reverse().ToArray(), 0);
                 }
-
+               
+                //将帧读出，计入列表
                 List<Frame> ReadFramesFromFile(string file)
                 {
                     var frameLength = 512;
@@ -97,20 +109,20 @@ namespace ExcelAddIn2
                         frame.Num = ToggleEndian16(reader.ReadUInt16());
                         frame.StartTime = ToggleEndian32(reader.ReadUInt32());
                         frame.EndTime = ToggleEndian32(reader.ReadUInt32());
-                        frame.Reserved1 = reader.ReadUInt16();
+                        frame.Reserved1 =ToggleEndian16( reader.ReadUInt16());
                         frame.Data = new Data[30];
 
                         // 16*30=480
                         for (int j = 0; j < 30; j++)
                         {
-                            frame.Data[j].Flow = reader.ReadInt16();
-                            frame.Data[j].Speed = reader.ReadInt16();
-                            frame.Data[j].Current = reader.ReadInt16();
-                            frame.Data[j].IPressure = reader.ReadInt16();
-                            frame.Data[j].OPressure = reader.ReadInt16();
-                            frame.Data[j].SVoltage = reader.ReadInt16();
-                            frame.Data[j].Reserved5 = reader.ReadInt16();
-                            frame.Data[j].Alarm = reader.ReadInt16();
+                            frame.Data[j].Flow = ToggleEndian16(reader.ReadUInt16());
+                            frame.Data[j].Speed = ToggleEndian16(reader.ReadUInt16());
+                            frame.Data[j].Current = ToggleEndian16(reader.ReadUInt16());
+                            frame.Data[j].IPressure = ToggleEndian16(reader.ReadUInt16());
+                            frame.Data[j].OPressure = ToggleEndian16(reader.ReadUInt16());
+                            frame.Data[j].SVoltage = ToggleEndian16(reader.ReadUInt16());
+                            frame.Data[j].Reserved5 = ToggleEndian16(reader.ReadUInt16());
+                            frame.Data[j].Alarm = ToggleEndian16(reader.ReadUInt16());
                         }
 
                         // 16
@@ -126,30 +138,21 @@ namespace ExcelAddIn2
                     return result;
                 }
 
+                //将其转换为符合规则的时间
                 DateTime ConvertDateTime(UInt32 raw_time)
                 {
-                    // TODO: delete test
-                    var test = new List<int>
-                    {
-                        MaskByte(raw_time, 25, 31),
-                        MaskByte(raw_time, 24, 21),
-                        MaskByte(raw_time, 20, 16),
-                        MaskByte(raw_time, 15, 11),
-                        MaskByte(raw_time, 10, 5),
-                        MaskByte(raw_time, 4, 0)
-                    };
                     return new DateTime(
-                        MaskByte(raw_time, 25, 31),
-                        MaskByte(raw_time, 24, 21),
-                        MaskByte(raw_time, 20, 16),
-                        MaskByte(raw_time, 15, 11),
-                        MaskByte(raw_time, 10, 5),
-                        MaskByte(raw_time, 4, 0));
+                        (MaskByte(raw_time, 25, 31) + 1980),
+                        MaskByte(raw_time, 21, 24),
+                        MaskByte(raw_time, 16, 20),
+                        MaskByte(raw_time, 11, 15),
+                        MaskByte(raw_time, 5, 10),
+                        (MaskByte(raw_time, 0, 4) * 2));
                 }
-
+                //提取指定位bit
                 int MaskByte(UInt32 number, int start, int end)
                 {
-                    return (int)(number & (int)(Math.Pow( 2, end) - Math.Pow(2, start))) >> start;
+                    return (int)(number & (uint)(Math.Pow(2, end+1) - Math.Pow(2, start))) >> start;
                 }
             }
         }
@@ -169,14 +172,14 @@ namespace ExcelAddIn2
 
         public struct Data
         {
-            public Int16 Flow;
-            public Int16 Speed;
-            public Int16 Current;
-            public Int16 IPressure;
-            public Int16 OPressure;
-            public Int16 SVoltage;
-            public Int16 Reserved5;
-            public Int16 Alarm;
+            public UInt16 Flow;
+            public UInt16 Speed;
+            public UInt16 Current;
+            public UInt16 IPressure;
+            public UInt16 OPressure;
+            public UInt16 SVoltage;
+            public UInt16 Reserved5;
+            public UInt16 Alarm;
         }
     }
 }
