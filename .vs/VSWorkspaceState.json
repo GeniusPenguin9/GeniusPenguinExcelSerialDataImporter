@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\ExcelAddIn2",
+    "\\ExcelAddIn2\\ExcelAddIn2"
   ],
+  "SelectedNode": "\\ExcelAddIn2\\ExcelAddIn2.sln",
   "PreviewInSolutionExplorer": false
 }

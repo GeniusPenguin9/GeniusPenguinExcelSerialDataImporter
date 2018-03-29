@@ -8,6 +8,7 @@ using Microsoft.Office.Tools.Excel;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
 
+
 namespace ExcelAddIn2
 {
     public partial class Ribbon1
@@ -47,7 +48,7 @@ namespace ExcelAddIn2
                         sheet.Cells[1, 9 + i * 7].Value = "Alarm" + i;
                     }
 
-                    int Old_Num = frames[0].Num-1;
+                    int Old_Num = frames[0].Num - 1;
                     foreach (var frame in frames)
                     {
                         if (frame.Head == StaticHead)
@@ -91,7 +92,7 @@ namespace ExcelAddIn2
                 {
                     return BitConverter.ToUInt16(BitConverter.GetBytes(number).Reverse().ToArray(), 0);
                 }
-               
+
                 //将帧读出，计入列表
                 List<Frame> ReadFramesFromFile(string file)
                 {
@@ -109,7 +110,7 @@ namespace ExcelAddIn2
                         frame.Num = ToggleEndian16(reader.ReadUInt16());
                         frame.StartTime = ToggleEndian32(reader.ReadUInt32());
                         frame.EndTime = ToggleEndian32(reader.ReadUInt32());
-                        frame.Reserved1 =ToggleEndian16( reader.ReadUInt16());
+                        frame.Reserved1 = ToggleEndian16(reader.ReadUInt16());
                         frame.Data = new Data[30];
 
                         // 16*30=480
@@ -152,7 +153,7 @@ namespace ExcelAddIn2
                 //提取指定位bit
                 int MaskByte(UInt32 number, int start, int end)
                 {
-                    return (int)(number & (uint)(Math.Pow(2, end+1) - Math.Pow(2, start))) >> start;
+                    return (int)(number & (uint)(Math.Pow(2, end + 1) - Math.Pow(2, start))) >> start;
                 }
             }
         }
@@ -180,6 +181,14 @@ namespace ExcelAddIn2
             public UInt16 SVoltage;
             public UInt16 Reserved5;
             public UInt16 Alarm;
+        }
+
+        private void DataCreate_Click(object sender, RibbonControlEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(XAxis.SelectedItem.Label) ||
+                string.IsNullOrWhiteSpace(YAxis.SelectedItem.Label))
+            { MessageBox.Show("请选择坐标轴"); return; }
+            (int)XAxis.SelectedItem.Tag
         }
     }
 }
