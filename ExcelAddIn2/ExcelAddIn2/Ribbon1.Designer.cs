@@ -40,15 +40,18 @@
             Microsoft.Office.Tools.Ribbon.RibbonDropDownItem ribbonDropDownItemImpl4 = this.Factory.CreateRibbonDropDownItem();
             Microsoft.Office.Tools.Ribbon.RibbonDropDownItem ribbonDropDownItemImpl5 = this.Factory.CreateRibbonDropDownItem();
             Microsoft.Office.Tools.Ribbon.RibbonDropDownItem ribbonDropDownItemImpl6 = this.Factory.CreateRibbonDropDownItem();
+            Microsoft.Office.Tools.Ribbon.RibbonDropDownItem ribbonDropDownItemImpl7 = this.Factory.CreateRibbonDropDownItem();
+            Microsoft.Office.Tools.Ribbon.RibbonDropDownItem ribbonDropDownItemImpl8 = this.Factory.CreateRibbonDropDownItem();
+            Microsoft.Office.Tools.Ribbon.RibbonDropDownItem ribbonDropDownItemImpl9 = this.Factory.CreateRibbonDropDownItem();
+            Microsoft.Office.Tools.Ribbon.RibbonDropDownItem ribbonDropDownItemImpl10 = this.Factory.CreateRibbonDropDownItem();
+            Microsoft.Office.Tools.Ribbon.RibbonDropDownItem ribbonDropDownItemImpl11 = this.Factory.CreateRibbonDropDownItem();
             this.DB_Tab = this.Factory.CreateRibbonTab();
             this.label_bottom = this.Factory.CreateRibbonGroup();
             this.DB_Open = this.Factory.CreateRibbonButton();
             this.group1 = this.Factory.CreateRibbonGroup();
             this.XAxis = this.Factory.CreateRibbonDropDown();
             this.YAxis = this.Factory.CreateRibbonDropDown();
-            this.separator1 = this.Factory.CreateRibbonSeparator();
             this.DataCreate = this.Factory.CreateRibbonButton();
-            this.DiaCreate = this.Factory.CreateRibbonButton();
             this.DB_Tab.SuspendLayout();
             this.label_bottom.SuspendLayout();
             this.group1.SuspendLayout();
@@ -79,20 +82,18 @@
             // 
             this.group1.Items.Add(this.XAxis);
             this.group1.Items.Add(this.YAxis);
-            this.group1.Items.Add(this.separator1);
             this.group1.Items.Add(this.DataCreate);
-            this.group1.Items.Add(this.DiaCreate);
             this.group1.Label = "图表生成工具";
             this.group1.Name = "group1";
             // 
             // XAxis
             // 
-            ribbonDropDownItemImpl2.Label = "每秒";
+            ribbonDropDownItemImpl2.Label = "每分钟";
             ribbonDropDownItemImpl2.Tag = "2";
-            ribbonDropDownItemImpl3.Label = "每分钟";
+            ribbonDropDownItemImpl3.Label = "每小时";
             ribbonDropDownItemImpl3.Tag = "120";
-            ribbonDropDownItemImpl4.Label = "每小时";
-            ribbonDropDownItemImpl4.Tag = "7200";
+            ribbonDropDownItemImpl4.Label = "每天";
+            ribbonDropDownItemImpl4.Tag = "2880";
             this.XAxis.Items.Add(ribbonDropDownItemImpl1);
             this.XAxis.Items.Add(ribbonDropDownItemImpl2);
             this.XAxis.Items.Add(ribbonDropDownItemImpl3);
@@ -103,14 +104,26 @@
             // YAxis
             // 
             ribbonDropDownItemImpl6.Label = "流量L/min";
+            ribbonDropDownItemImpl6.Tag = "C";
+            ribbonDropDownItemImpl7.Label = "转速rpm";
+            ribbonDropDownItemImpl7.Tag = "D";
+            ribbonDropDownItemImpl8.Label = "电流A";
+            ribbonDropDownItemImpl8.Tag = "E";
+            ribbonDropDownItemImpl9.Label = "入口压力mmHg";
+            ribbonDropDownItemImpl9.Tag = "F";
+            ribbonDropDownItemImpl10.Label = "出口压力mmHg";
+            ribbonDropDownItemImpl10.Tag = "G";
+            ribbonDropDownItemImpl11.Label = "系统电压V";
+            ribbonDropDownItemImpl11.Tag = "H";
             this.YAxis.Items.Add(ribbonDropDownItemImpl5);
             this.YAxis.Items.Add(ribbonDropDownItemImpl6);
+            this.YAxis.Items.Add(ribbonDropDownItemImpl7);
+            this.YAxis.Items.Add(ribbonDropDownItemImpl8);
+            this.YAxis.Items.Add(ribbonDropDownItemImpl9);
+            this.YAxis.Items.Add(ribbonDropDownItemImpl10);
+            this.YAxis.Items.Add(ribbonDropDownItemImpl11);
             this.YAxis.Label = "纵坐标";
             this.YAxis.Name = "YAxis";
-            // 
-            // separator1
-            // 
-            this.separator1.Name = "separator1";
             // 
             // DataCreate
             // 
@@ -118,12 +131,6 @@
             this.DataCreate.Name = "DataCreate";
             this.DataCreate.ShowImage = true;
             this.DataCreate.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.DataCreate_Click);
-            // 
-            // DiaCreate
-            // 
-            this.DiaCreate.Label = "生成图表";
-            this.DiaCreate.Name = "DiaCreate";
-            this.DiaCreate.ShowImage = true;
             // 
             // Ribbon1
             // 
@@ -147,11 +154,9 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup label_bottom;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton DB_Open;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton DataCreate;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton DiaCreate;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup group1;
         internal Microsoft.Office.Tools.Ribbon.RibbonDropDown XAxis;
         internal Microsoft.Office.Tools.Ribbon.RibbonDropDown YAxis;
-        internal Microsoft.Office.Tools.Ribbon.RibbonSeparator separator1;
     }
 
     partial class ThisRibbonCollection

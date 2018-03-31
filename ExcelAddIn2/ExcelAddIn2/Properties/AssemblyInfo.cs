@@ -6,13 +6,13 @@ using System.Security;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("ExcelAddIn2")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("体外泵数据分析Excel插件")]
+[assembly: AssemblyDescription("用于分析体外泵记录")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ExcelAddIn2")]
+[assembly: AssemblyCompany("Microport")]
+[assembly: AssemblyProduct("体外泵数据分析Excel插件")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("Microport")]
 [assembly: AssemblyCulture("")]
 
 //将 ComVisible 设置为 false 将使此程序集中的类型

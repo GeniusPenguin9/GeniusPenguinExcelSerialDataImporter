@@ -13,9 +13,11 @@ namespace ExcelAddIn2
 {
     public partial class Ribbon1
     {
+        Excel.Application application;
+
         private void Ribbon1_Load(object sender, RibbonUIEventArgs e)
         {
-
+            application = Globals.ThisAddIn.Application;
         }
 
         private void DB_Open_Click(object sender, RibbonControlEventArgs e)
@@ -27,16 +29,11 @@ namespace ExcelAddIn2
             openFileDialog.Title = "选择数据文件";
             openFileDialog.ShowDialog();
 
+            var line = 2;
             if (openFileDialog.FileName.Length > 0)
             {
                 foreach (var file in openFileDialog.FileNames)
                 {
-                    var frames = ReadFramesFromFile(file);
-                    var line = 2;
-                    uint StaticHead = 0xA050AA55;
-
-                    sheet.Cells[1, 1].Value = "Start Time";
-                    sheet.Cells[1, 2].Value = "End Time";
                     for (int i = 0; i < 30; i++)
                     {
                         sheet.Cells[1, 3 + i * 7].Value = "Flow" + i;
@@ -47,6 +44,12 @@ namespace ExcelAddIn2
                         sheet.Cells[1, 8 + i * 7].Value = "SVoltage" + i;
                         sheet.Cells[1, 9 + i * 7].Value = "Alarm" + i;
                     }
+                    var frames = ReadFramesFromFile(file);
+                    uint StaticHead = 0xA050AA55;
+
+                    sheet.Cells[1, 1].Value = "Start Time";
+                    sheet.Cells[1, 2].Value = "End Time";
+                   
 
                     int Old_Num = frames[0].Num - 1;
                     foreach (var frame in frames)
@@ -73,13 +76,13 @@ namespace ExcelAddIn2
                             }
                             else {
                                 MessageBox.Show("数据异常：存在漏帧");
-                                break;
+                                return;
                             }
                         }
                         else
                         {
                             MessageBox.Show("数据异常：帧头错误");
-                            break;
+                            return;
                         }
                     }
                 }
@@ -188,7 +191,19 @@ namespace ExcelAddIn2
             if (string.IsNullOrWhiteSpace(XAxis.SelectedItem.Label) ||
                 string.IsNullOrWhiteSpace(YAxis.SelectedItem.Label))
             { MessageBox.Show("请选择坐标轴"); return; }
-            (int)XAxis.SelectedItem.Tag
+
+            var sheet = (Excel.Worksheet)application.ActiveWorkbook.Worksheets.Add();
+            sheet.Name = "图表生成";
+            sheet.Range["A:A"].NumberFormatLocal = "yyyy/m/d h:mm";
+            var irows = application.ActiveWorkbook.Worksheets["Sheet1"].UsedRange.Rows.Count;
+            var RoundNum = Math.Floor((double)((irows - 1) / int.Parse( XAxis.SelectedItem.Tag)));
+            for(var j = 0; j < RoundNum;j++)
+            {
+                sheet.Cells[j + 1,"A"]= 
+                    application.ActiveWorkbook.Worksheets["Sheet1"].Cells[2 + j * int.Parse(XAxis.SelectedItem.Tag), 1];
+                sheet.Cells[j + 1, "B"] =
+                    application.ActiveWorkbook.Worksheets["Sheet1"].Cells[2 + j * int.Parse(XAxis.SelectedItem.Tag), YAxis.SelectedItem.Tag];
+            }       
         }
     }
 }

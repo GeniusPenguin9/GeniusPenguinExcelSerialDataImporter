@@ -50,3 +50,4 @@ D:\[4]Penguin\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\obj\D
 D:\[4]Penguin\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.csproj.CoreCompileInputs.cache
 D:\[4]Penguin\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.dll
 D:\[4]Penguin\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.pdb
+D:\[4]Penguin\GeniusPenguinExcelSerialDataImporter\ExcelAddIn2\ExcelAddIn2\obj\Debug\ExcelAddIn2.csproj.CopyComplete
