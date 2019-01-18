@@ -63,12 +63,13 @@ namespace ExcelAddIn2
                                 sheet.Cells[line, 2].Value = ConvertDateTime(frame.EndTime);
                                 for (int i = 0; i < 30; i++)
                                 {
-                                    sheet.Cells[line, 3 + i * 7].Value = frame.Data[i].Flow;
-                                    sheet.Cells[line, 4 + i * 7].Value = frame.Data[i].Speed;
-                                    sheet.Cells[line, 5 + i * 7].Value = frame.Data[i].Current;
-                                    sheet.Cells[line, 6 + i * 7].Value = frame.Data[i].IPressure;
-                                    sheet.Cells[line, 7 + i * 7].Value = frame.Data[i].OPressure;
-                                    sheet.Cells[line, 8 + i * 7].Value = frame.Data[i].SVoltage;
+                                    // 下记转换系数来源于AD转换系数，由硬件工程师提供
+                                    sheet.Cells[line, 3 + i * 7].Value = frame.Data[i].Flow * 13.2 / 4096;
+                                    sheet.Cells[line, 4 + i * 7].Value = frame.Data[i].Speed * 1.173;
+                                    sheet.Cells[line, 5 + i * 7].Value = frame.Data[i].Current * 7.953 / 4096;
+                                    sheet.Cells[line, 6 + i * 7].Value = (frame.Data[i].IPressure * 29.403 / 4096 - 14.7) * 51.7149;
+                                    sheet.Cells[line, 7 + i * 7].Value = (frame.Data[i].OPressure * 29.403 / 4096 - 14.7) * 51.7149;
+                                    sheet.Cells[line, 8 + i * 7].Value = frame.Data[i].SVoltage * 33.71 / 4096;
                                     sheet.Cells[line, 9 + i * 7].Value = frame.Data[i].Alarm;
                                 }
                                 line++;
@@ -147,10 +148,10 @@ namespace ExcelAddIn2
                 {
                     return new DateTime(
                         (MaskByte(raw_time, 25, 31) + 1980),
-                        MaskByte(raw_time, 21, 24),
-                        MaskByte(raw_time, 16, 20),
-                        MaskByte(raw_time, 11, 15),
-                        MaskByte(raw_time, 5, 10),
+                         MaskByte(raw_time, 21, 24),
+                         MaskByte(raw_time, 16, 20),
+                         MaskByte(raw_time, 11, 15),
+                         MaskByte(raw_time, 5, 10),
                         (MaskByte(raw_time, 0, 4) * 2));
                 }
                 //提取指定位bit
